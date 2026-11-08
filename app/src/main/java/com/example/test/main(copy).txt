@@ -1,0 +1,225 @@
+package com.example.test
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.test.screens.Counter
+import com.example.test.screens.ProfileScreen
+import com.example.test.ui.theme.TestTheme
+import kotlinx.coroutines.launch
+
+//#1E1E24  #92140C  #FFF8F0   #8F8B8A
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            TestTheme {
+
+                val pagerState = rememberPagerState(
+                    pageCount = { 2 }
+                )
+
+                val scope = rememberCoroutineScope()
+
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        NavigationBar (
+                            modifier = Modifier.height(108.dp)
+                        ){
+
+                            NavigationBarItem(
+                                modifier = Modifier.weight(2f)
+                                    .padding(5.dp)
+                                    .border(
+                                        width = if (pagerState.currentPage == 0) 2.dp else 0.dp,
+                                        color = Color.DarkGray,
+                                        shape = RoundedCornerShape(10.dp)
+                                    ),
+                                selected = pagerState.currentPage == 0,
+                                onClick = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(0)
+                                    }
+                                },
+                                icon = {
+                                    Icon(
+                                        Icons.Default.Home,
+                                        contentDescription = "Счётчик"
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = "Счётчик",
+                                        modifier = Modifier.offset(y = (-6).dp)
+                                    )
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color.Transparent
+                                ),
+                            )
+
+                            NavigationBarItem(
+
+                                modifier = Modifier.weight(1f)
+                                    .padding(5.dp)
+                                    .border(
+                                        width = if (pagerState.currentPage == 1) 2.dp else 0.dp,
+                                        color = Color.DarkGray,
+                                        shape = RoundedCornerShape(10.dp)
+                                    ),
+                                selected = pagerState.currentPage == 1,
+                                onClick = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(1)
+                                    }
+                                },
+                                icon = {
+                                    Icon(
+                                        Icons.Default.Person,
+                                        contentDescription = "Профиль"
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = "Профиль",
+                                        modifier = Modifier.offset(y = (-4).dp)
+                                    )
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color.Transparent
+                                ),
+                            )
+                        }
+                    }
+                ) { innerPadding ->
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize()) { page ->
+                        when (page) {
+                            0 -> Counter()
+                            1 -> ProfileScreen()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CounterPreview() {
+    TestTheme {
+
+        val pagerState = rememberPagerState(
+            pageCount = { 2 }
+        )
+
+        val scope = rememberCoroutineScope()
+
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = {
+                NavigationBar {
+
+                    NavigationBarItem(
+                        modifier = Modifier.weight(2f)
+                            .padding(10.dp)
+                            .border(
+                                width = if (pagerState.currentPage == 0) 2.dp else 0.dp,
+                                color = Color.DarkGray,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        selected = pagerState.currentPage == 0,
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(0)
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                Icons.Default.Home,
+                                contentDescription = "Счётчик"
+                            )
+                        },
+                        label = {
+                            Text("Счётчик")
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = Color.Transparent
+                        ),
+                    )
+
+                    NavigationBarItem(
+
+                        modifier = Modifier.weight(1f)
+                            .padding(10.dp)
+                            .border(
+                                width = if (pagerState.currentPage == 1) 2.dp else 0.dp,
+                                color = Color.DarkGray,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        selected = pagerState.currentPage == 1,
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(1)
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                Icons.Default.Person,
+                                contentDescription = "Профиль"
+                            )
+                        },
+                        label = {
+                            Text("Профиль")
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = Color.Transparent
+                        ),
+                    )
+                }
+            }
+        ) { innerPadding ->
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()) { page ->
+                when (page) {
+                    0 -> Counter()
+                    1 -> ProfileScreen()
+                }
+            }
+        }
+    }
+}
